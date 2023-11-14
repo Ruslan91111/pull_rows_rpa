@@ -1,7 +1,18 @@
+"""
+Class MakerFiles - def make_files_in_dir
+class CommonFile - def create_and_fill_common_file
+def check_the_files - check the files to find new rows.
+def validate_input -
+def check_rows_in_files -
+def create_common_file -
+def create_files -
+check_the_dir
+"""
+
 import os
+import logging
 import pandas as pd
 import numpy as np
-import logging
 
 
 # Logger
@@ -37,7 +48,6 @@ class MakerFiles:
 
 class CommonFile:
     """Работа с общим файлом xlsx."""
-
     def __init__(self, path_for_example: str):
         self.example_for_common_file = path_for_example
 
@@ -70,7 +80,7 @@ def check_the_files(path_to_files: str, path_to_common: str,):
     for filename in os.listdir(path_to_files):
         logger.info(f"Checking file {filename}.")
         df = pd.read_excel(path_to_files + '/' + filename)
-        for index, row in df.iterrows():
+        for index, row in df.iterrows():  # Посмотреть index. Может убрать.
             # Проверяем есть ли строка в общем файле, если нет, то добавляем.
             if row.to_dict() not in current_main_df.to_dict(orient='records'):
                 current_main_df = current_main_df._append(row)
@@ -134,6 +144,7 @@ def create_common_file():
 
 
 def check_rows_in_files():
+    """Проверить файлы на наличие новых строчек, которых нет в общем файле."""
     path_to_main = input("Введите полный путь до общего xlsx файла, в который\n"
                          "будут сохраняться строки из xlsx файлов менеджеров:\n>>>")
     validate_input(path_to_main)
