@@ -48,6 +48,8 @@ class CommonFile:
         # Перебираем файлы в папке, читаем добавляем в общий датафрейм.
         for filename in os.listdir(path_to_files):
             path_to_filename = path_to_files + '\\' + filename
+            print(path_to_filename)
+            print(self.example_for_common_file)
             if path_to_filename == self.example_for_common_file:
                 continue
             df = pd.read_excel(path_to_files + '/' + filename)
@@ -72,7 +74,7 @@ def check_the_files(path_to_files: str, path_to_common: str,):
             # Проверяем есть ли строка в общем файле, если нет, то добавляем.
             if row.to_dict() not in current_main_df.to_dict(orient='records'):
                 current_main_df = current_main_df._append(row)
-                logger.info(f"Row {row} append.")
+                logger.info(f"Row {row} append.")  # не убрать ли
 
     # Записываем общий датафрейм в Excel файл.
     current_main_df.to_excel(path_to_common, index=False)
@@ -96,19 +98,18 @@ def check_the_dir(dir_with_files):
 def create_files():
     """Создать файлы """
     first_input = input('Желаете создать файлы xlsx? \n'
-                        'Введите: Да или Нет \n->')
+                        'Введите: Да или Нет \n>>>')
     if first_input.strip(" ' ,.").lower() == 'да':
         path_to_all_files = input("Введите полный путь до директории, в которой "
-                                  "будут находиться xlsx файлы:\n-> ")
+                                  "будут находиться xlsx файлы:\n>>>")
         number_of_rows = int(input("Введите число - количество строк, которые"
-                                   " необходимо создать в xlsx файлах:\n-> "))
+                                   " необходимо создать в xlsx файлах:\n>>>"))
         number_of_cols = int(input("Введите число -  количество колонок которые"
-                                   " необходимо создать в xlsx файлах:\n-> "))
+                                   " необходимо создать в xlsx файлах:\n>>>"))
         number_of_files = int(input("Введите число - количество xlsx файлов,"
-                                    " которые необходимо создать:\n-> "))
+                                    " которые необходимо создать:\n>>>"))
         start_number_for_file = int(input("Введите число - с которого начнется "
-                                          "нумерация xlsx файлов:\n-> "))
-
+                                          "нумерация xlsx файлов:\n>>>"))
         check_the_dir(path_to_all_files)
         maker_file = MakerFiles(number_of_rows, number_of_cols)
         maker_file.make_files_in_dir(number_of_files, start_number_for_file, path_to_all_files)
@@ -118,15 +119,15 @@ def create_files():
 def create_common_file():
     """Создать общий файл, куда будут подтягиваться строки из других файлов."""
     first_input = input('Желаете создать общий (Консолидированный) файл xlsx? '
-                        'Введите: Да или Нет\n->  ')
+                        'Введите: Да или Нет\n>>>')
     if first_input.strip(" ' ,.").lower() == 'да':
         path_to_example_for_main = input("Введите полный путь до xlsx файла: "
                                          "который будет взят за образец, "
-                                         "в том числе название файла с расширением:\n-> ")
+                                         "в том числе название файла с расширением:\n>>>")
         validate_input(path_to_example_for_main)
         name_for_common_file = input("Введите название создаваемого "
-                                     "общего консолидированного файла\n-> ")
-        path_to_dir = input("Введите полный путь до директории с xlsx файлами:\n-> ")
+                                     "общего консолидированного файла\n>>>")
+        path_to_dir = input("Введите полный путь до директории с xlsx файлами:\n>>>")
         validate_input(path_to_dir)
         common_file = CommonFile(path_to_example_for_main)
         common_file.create_and_fill_common_file(path_to_dir, name_for_common_file)
@@ -134,9 +135,9 @@ def create_common_file():
 
 def check_rows_in_files():
     path_to_main = input("Введите полный путь до общего xlsx файла, в который\n"
-                         "будут сохраняться строки из xlsx файлов менеджеров:\n-> ")
+                         "будут сохраняться строки из xlsx файлов менеджеров:\n>>>")
     validate_input(path_to_main)
-    path_to_dir = input("Введите полный путь до директории с xlsx файлами: ")
+    path_to_dir = input("Введите полный путь до директории с xlsx файлами:\n>>>")
     validate_input(path_to_dir)
     check_the_files(path_to_dir, path_to_main)
 
