@@ -58,8 +58,6 @@ class CommonFile:
         # Перебираем файлы в папке, читаем добавляем в общий датафрейм.
         for filename in os.listdir(path_to_files):
             path_to_filename = path_to_files + '\\' + filename
-            print(path_to_filename)
-            print(self.example_for_common_file)
             if path_to_filename == self.example_for_common_file:
                 continue
             df = pd.read_excel(path_to_files + '/' + filename)
@@ -72,11 +70,12 @@ class CommonFile:
         logger.info(f"Data from xlsx-files dumped in common {name_for_common_file}")
 
 
-def check_the_files(path_to_files: str, path_to_common: str,):
+def check_the_files(path_to_files: str, path_to_common: str):
     """Перебрать файлы в папке, пройтись по строкам в файлах и если
     строки уже есть в общем файле, то пропустить, если нет, то добавить."""
     current_main_df = pd.read_excel(path_to_common)
     logger.info(f"Start to check the xlsx files on new rows")
+
     for filename in os.listdir(path_to_files):
         logger.info(f"Checking file {filename}.")
         df = pd.read_excel(path_to_files + '/' + filename)
@@ -110,33 +109,44 @@ def create_files():
     first_input = input('Желаете создать файлы xlsx? \n'
                         'Введите: Да или Нет \n>>>')
     if first_input.strip(" ' ,.").lower() == 'да':
+        print('Создаем файлы xlsx со случайными данными для примера.')
+
         path_to_all_files = input("Введите полный путь до директории, в которой "
                                   "будут находиться xlsx файлы:\n>>>")
+
         number_of_rows = int(input("Введите число - количество строк, которые"
                                    " необходимо создать в xlsx файлах:\n>>>"))
+
         number_of_cols = int(input("Введите число -  количество колонок которые"
                                    " необходимо создать в xlsx файлах:\n>>>"))
+
         number_of_files = int(input("Введите число - количество xlsx файлов,"
                                     " которые необходимо создать:\n>>>"))
+
         start_number_for_file = int(input("Введите число - с которого начнется "
                                           "нумерация xlsx файлов:\n>>>"))
+
         check_the_dir(path_to_all_files)
-        maker_file = MakerFiles(number_of_rows, number_of_cols)
-        maker_file.make_files_in_dir(number_of_files, start_number_for_file, path_to_all_files)
-        return
+        maker_files_xlsx = MakerFiles(number_of_rows, number_of_cols)
+        maker_files_xlsx.make_files_in_dir(number_of_files, start_number_for_file, path_to_all_files)
 
 
 def create_common_file():
     """Создать общий файл, куда будут подтягиваться строки из других файлов."""
     first_input = input('Желаете создать общий (Консолидированный) файл xlsx? '
                         'Введите: Да или Нет\n>>>')
+
     if first_input.strip(" ' ,.").lower() == 'да':
+
         path_to_example_for_main = input("Введите полный путь до xlsx файла: "
                                          "который будет взят за образец, "
                                          "в том числе название файла с расширением:\n>>>")
         validate_input(path_to_example_for_main)
+
         name_for_common_file = input("Введите название создаваемого "
-                                     "общего консолидированного файла\n>>>")
+                                     "общего консолидированного файла(файл будет "
+                                     "создан в текущей рабочей директории)\n>>>")
+
         path_to_dir = input("Введите полный путь до директории с xlsx файлами:\n>>>")
         validate_input(path_to_dir)
         common_file = CommonFile(path_to_example_for_main)
