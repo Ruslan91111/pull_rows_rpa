@@ -1,4 +1,11 @@
 """
+Utility to work with files xlsx through the CLI. Contain 3 functions:
+1) to create files xlsx, that filled random data, also to determine quantity
+rows and cols in files;
+2) to create common xlsx file with data from chosen files;
+3) to check the files xlsx and to pull new rows in common file.
+
+
 Class MakerFiles - def make_files_in_dir
 class CommonFile - def create_and_fill_common_file
 def check_the_files - check the files to find new rows.
@@ -8,7 +15,6 @@ def create_common_file -
 def create_files -
 check_the_dir
 """
-
 import os
 import logging
 import pandas as pd
@@ -19,7 +25,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-fh = logging.FileHandler('./log.txt')
+fh = logging.FileHandler('log.txt')
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
