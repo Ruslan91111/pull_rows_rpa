@@ -10,6 +10,9 @@ python = "3.12,<3.13"
 pandas = "^2.1.1"
 matplotlib = "^3.8.1"
 playwright = "^1.39.0"
+pylint = "^3.0.2"
+pyqt6 = "6.4.2"
+charset-normalizer = "^3.3.2"
 
 
 [build-system]
