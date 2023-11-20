@@ -19,6 +19,8 @@ file_handler = logging.FileHandler('log_gui_app.txt')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
@@ -36,7 +38,7 @@ class MainWindow(QWidget):
         layout = QVBoxLayout()
         self.setLayout(layout)
 
-        # Атрибуты, чтобы сохранить список файлов и путь к консолид. файл
+        # Атрибуты, чтобы сохранить список файлов и путь к консолидированному файлу.
         self.file_list_paths = []
         self.path_to_consolidated = ""
 
@@ -70,34 +72,39 @@ class MainWindow(QWidget):
         self.show()
 
     def open_file_dialog(self):
+        """Choose files for check."""
         filenames, _ = QFileDialog.getOpenFileNames(self, "Select Files")
         if filenames:
-            self.file_list.addItems([str(Path(filename)) for filename in filenames])
-            self.file_list_paths.extend([str(Path(filename)) for filename in filenames])
+            for filename in filenames:
+                path_to_file = [str(Path(filename))]
+                self.file_list.addItems(path_to_file)
+                self.file_list_paths.extend(path_to_file)
 
     def open_consolidated_file(self):
+        """Choose consolidated file for check."""
         filenames, _ = QFileDialog.getOpenFileNames(self, "Select Files")
         if filenames:
             self.consolidated_file.addItems([str(Path(filename)) for filename in filenames])
             self.path_to_consolidated = filenames[0]
 
     def check_the_rows(self):
+        """Check the rows in files."""
         current_main_df = pd.read_excel(self.path_to_consolidated)
+        logger.info("\n\n********************Start session check files********************")
         # Цикл по выбранным файлам
         for file in self.file_list_paths:
-
             df = pd.read_excel(file)
-            logger.info(f"{df}")
+            logger.info(f"Start checking file with path: {file} for new rows.")
             # Цикл по строкам файла
             for index, row in df.iterrows():
                 if row.to_dict() not in current_main_df.to_dict(orient='records'):
-                    print('current', current_main_df)
-                    print(row)
                     current_main_df = current_main_df._append(row)
-                    print('*************', current_main_df)
+                    logger.info(f"Add row in file: {row.to_dict()}.")
+            logger.info(f"Checking file completed.")
 
         current_main_df.to_excel(self.path_to_consolidated, index=False)
-        print("Все строки сохранены в файле ", self.path_to_consolidated)
+        logger.info(f"Все строки сохранены в файле {self.path_to_consolidated}"
+                    f"\n********************Stop session*************************")
 
 
 if __name__ == '__main__':
